@@ -1,7 +1,5 @@
 package server;
 
-import java.io.PipedOutputStream;
-
 /**
  * This class represents the battleship driver
  *
