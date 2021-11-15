@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
  * @author Katherine Blanton
  */
 public class BattleClient extends MessageSource implements MessageListener {
+    // TODO: 11/15/2021 The Client needs a ConnectionAgent instance somewhere
 
     /**Host client will connect to */
     private final InetAddress host;
