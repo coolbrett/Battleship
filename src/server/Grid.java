@@ -13,6 +13,9 @@ public class Grid {
     /** Grid field for Grid class */
     private Symbol[][] grid;
 
+    /** Username field */
+    private String username;
+
     /** Size of grid (size being 8 would mean grid is 8x8 */
     private final int size;
 
@@ -23,12 +26,13 @@ public class Grid {
      * Constructor for creating a Grid
      * @param size size for grid field to be
      */
-    public Grid(int size){
+    public Grid(int size, String username){
         this.size = size;
+        this.username = username;
         this.grid = new Symbol[size][size];
         fillGrid();
         placeShips();
-        System.out.println("Grid built!");
+        //System.out.println("Grid built!");
     }
 
     /**
@@ -36,7 +40,7 @@ public class Grid {
      */
     private void placeShips(){
         int shipCount = determineShipCount();
-        System.out.println("\nGoing to place " + shipCount + " ships...");
+        //System.out.println("\nGoing to place " + shipCount + " ships...");
         Symbol[] ships = determineShipsToPlace(shipCount);
         for (int i = 0; i < ships.length; i++) {
             Symbol ship = ships[i];
@@ -56,7 +60,7 @@ public class Grid {
                         if (putShip(x, y, direction, ship)) {
                             shipPlaced = true;
                         }else{
-                            System.out.println("Failed to place " + ship.getSize());
+                            //System.out.println("Failed to place " + ship.getSize());
                             directions.remove(Integer.valueOf(direction));
                         }
                     }else {
@@ -68,7 +72,7 @@ public class Grid {
                         if (putShip(x, y, direction, ship)) {
                             shipPlaced = true;
                         }else{
-                            System.out.println("Failed to place " + ship.getName());
+                            //System.out.println("Failed to place " + ship.getName());
                             directions.remove(Integer.valueOf(direction));
                         }
                     }else {
@@ -80,7 +84,7 @@ public class Grid {
                         if (putShip(x, y, direction, ship)) {
                             shipPlaced = true;
                         }else{
-                            System.out.println("Failed to place " + ship.getName());
+                            //System.out.println("Failed to place " + ship.getName());
                             directions.remove(Integer.valueOf(direction));
                         }
                     }else {
@@ -92,7 +96,7 @@ public class Grid {
                         if (putShip(x, y, direction, ship)) {
                             shipPlaced = true;
                         }else{
-                            System.out.println("Failed to place " + ship.getName());
+                            //System.out.println("Failed to place " + ship.getName());
                             directions.remove(Integer.valueOf(direction));
                         }
                     }else {
@@ -101,7 +105,7 @@ public class Grid {
                 }
             }
             if (!shipPlaced) {
-                System.out.printf("%s could not be placed", ship.getName());
+                //System.out.printf("%s could not be placed", ship.getName());
                 //try and re-place the ship
                 i--;
             }
@@ -120,11 +124,11 @@ public class Grid {
         Symbol[][] temp = makeDeepClone(grid);
         //Up
         if (direction == 1){
-            System.out.printf("\nTrying to place %s going UP\n", ship.getName());
+            //System.out.printf("\nTrying to place %s going UP\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y-i][x] == Symbol.EMPTY){
                     temp[y-i][x] = ship;
-                    System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y-i, x);
+                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y-i, x);
                 }else {
                     return false;
                 }
@@ -132,11 +136,11 @@ public class Grid {
             grid = makeDeepClone(temp);
         }//Right
         else if (direction == 2) {
-            System.out.printf("\nTrying to place %s going RIGHT\n", ship.getName());
+            //System.out.printf("\nTrying to place %s going RIGHT\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y][x+i] == Symbol.EMPTY){
                     temp[y][x+i] = ship;
-                    System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x+i);
+                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x+i);
 
                 }else {
                     return false;
@@ -146,11 +150,11 @@ public class Grid {
 
         }//Down
         else if (direction == 3){
-            System.out.printf("\nTrying to place %s going DOWN\n", ship.getName());
+            //System.out.printf("\nTrying to place %s going DOWN\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y+i][x] == Symbol.EMPTY){
                     temp[y+i][x] = ship;
-                    System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y+i, x);
+                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y+i, x);
                 }else {
                     return false;
                 }
@@ -159,11 +163,11 @@ public class Grid {
 
         }//Left
         else if (direction == 4){
-            System.out.printf("\nTrying to place %s going LEFT\n", ship.getName());
+            //System.out.printf("\nTrying to place %s going LEFT\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y][x-i] == Symbol.EMPTY){
                     temp[y][x-i] = ship;
-                    System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x-i);
+                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x-i);
 
                 }else {
                     return false;
@@ -250,28 +254,31 @@ public class Grid {
      * @return nicely formatted grid
      */
     public String toString() {
-        // TODO: 11/19/2021 Have it print the ship symbols````````
+        String board = "";
+        String space = " ";
         String columnHeader = " ";
         for (int i = 0; i < size; i++) {
             columnHeader = columnHeader + "   " + String.valueOf(i);
         }
-        columnHeader = columnHeader + "\n";
-        String board = "";
+        board += columnHeader + "\n";
+
         String body = "  ";
         String inBetween = "+---";
-        String lines = "|   ";
-        String numberBetween = " ";
+        String lines = "| ";
         for (int i = 0; i < size; i++) {
             body = body + (inBetween);
-            numberBetween = numberBetween + lines;
         }
-        body = body + "+\n";
-        numberBetween = numberBetween + "|\n";
-        board = columnHeader;
-        for (int i = 0; i < size; i++) {
-            board = board + body + String.valueOf(i) + numberBetween;
+        body += "+";
+        board += body + "\n";
+
+        for (int i = 0; i < grid.length; i++){
+            board += i + space;
+            for (int j = 0; j < grid.length; j++){
+                board += lines + grid[j][i].getSymbol() + space;
+            }
+            board += lines + "\n" + body + "\n";
         }
-        return board + body;
+        return board;
     }
 
     /**
@@ -285,5 +292,13 @@ public class Grid {
             temp[i] = Arrays.copyOf(array[i], array[i].length);
         }
         return temp;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
