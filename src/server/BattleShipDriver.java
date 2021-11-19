@@ -23,7 +23,11 @@ public class BattleShipDriver {
     public static void main(String[] args){
 
         BattleServer server = new BattleServer(PORTNUM);
-
+        Grid grid1 = new Grid(7);
+        Grid grid2 = new Grid(7);
+        System.out.println("Grid 1:\n*******************************\n" + grid1);
+        //System.out.println("Grid 2:\n*******************************\n" + grid2);
+        //System.out.println("check");
 
     }
 
