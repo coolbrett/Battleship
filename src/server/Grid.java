@@ -46,7 +46,6 @@ public class Grid {
      */
     private void placeShips(){
         int shipCount = determineShipCount();
-        //System.out.println("\nGoing to place " + shipCount + " ships...");
         Symbol[] ships = determineShipsToPlace(shipCount);
         for (int i = 0; i < ships.length; i++) {
             Symbol ship = ships[i];
@@ -62,83 +61,84 @@ public class Grid {
 
                 //Up
                 if (direction == 1) {
-                    if ((y - ship.getSize()) < size && y - ship.getSize() > -1) {
-                        if (putShip(x, y, direction, ship)) {
-                            shipPlaced = true;
-                        }else{
-                            //System.out.println("Failed to place " + ship.getSize());
-                            directions.remove(Integer.valueOf(direction));
-                        }
-                    }else {
-                        directions.remove(Integer.valueOf(direction));
-                    }
+                    shipPlaced = tryUp(x, y, ship, direction, directions);
                     //Right
                 } else if (direction == 2) {
-                    if (x + ship.getSize() < size && x + ship.getSize() > -1) {
-                        if (putShip(x, y, direction, ship)) {
-                            shipPlaced = true;
-                        }else{
-                            //System.out.println("Failed to place " + ship.getName());
-                            directions.remove(Integer.valueOf(direction));
-                        }
-                    }else {
-                        directions.remove(Integer.valueOf(direction));
-                    }
+                    shipPlaced = tryRight(x, y, ship, direction, directions);
                     //Down
                 } else if (direction == 3) {
-                    if ((y + ship.getSize()) < size && y + ship.getSize() > -1) {
-                        if (putShip(x, y, direction, ship)) {
-                            shipPlaced = true;
-                        }else{
-                            //System.out.println("Failed to place " + ship.getName());
-                            directions.remove(Integer.valueOf(direction));
-                        }
-                    }else {
-                        directions.remove(Integer.valueOf(direction));
-                    }
+                    shipPlaced = tryDown(x, y, ship, direction, directions);
                     //Left
                 } else if (direction == 4) {
-                    if (x - ship.getSize() < size && x - ship.getSize() > -1) {
-                        if (putShip(x, y, direction, ship)) {
-                            shipPlaced = true;
-                        }else{
-                            //System.out.println("Failed to place " + ship.getName());
-                            directions.remove(Integer.valueOf(direction));
-                        }
-                    }else {
-                        directions.remove(Integer.valueOf(direction));
-                    }
+                    shipPlaced = tryLeft(x, y, ship, direction, directions);
                 }
             }
             if (!shipPlaced) {
-                //System.out.printf("%s could not be placed", ship.getName());
-                //try and re-place the ship
                 i--;
             }
         }
     }
 
-    private void tryUp(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions, boolean shipPlaced){
+    private boolean tryUp(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions){
         if ((y - ship.getSize()) < size && y - ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
-                shipPlaced = true;
+                return true;
             }else{
-                //System.out.println("Failed to place " + ship.getSize());
                 directions.remove(Integer.valueOf(direction));
             }
         }else {
             directions.remove(Integer.valueOf(direction));
         }
+        return false;
     }
 
-    /**
-     * Helper method to place a single ship
-     * @param x x coordinate to start placement
-     * @param y y coordinate to start placement
-     * @param direction direction to place ship
-     * @param ship ship to be placed
-     * @return true if ship is placed, false if not
-     */
+    private boolean tryRight(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+        if (x + ship.getSize() < size && x + ship.getSize() > -1) {
+            if (putShip(x, y, direction, ship)) {
+                return true;
+            }else{
+                directions.remove(Integer.valueOf(direction));
+            }
+        }else {
+            directions.remove(Integer.valueOf(direction));
+        }
+        return false;
+    }
+
+    private boolean tryDown(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+        if ((y + ship.getSize()) < size && y + ship.getSize() > -1) {
+            if (putShip(x, y, direction, ship)) {
+                return true;
+            }else{
+                directions.remove(Integer.valueOf(direction));
+            }
+        }else {
+            directions.remove(Integer.valueOf(direction));
+        }
+        return false;
+    }
+
+    private boolean tryLeft(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+        if (x - ship.getSize() < size && x - ship.getSize() > -1) {
+            if (putShip(x, y, direction, ship)) {
+                return true;
+            }else{
+                directions.remove(Integer.valueOf(direction));
+            }
+        }else {
+            directions.remove(Integer.valueOf(direction));
+        }
+        return false;
+    }
+
+        /**
+         * Helper method to place a single ship
+         * @param x x coordinate to start placement
+         * @param y y coordinate to start placement
+         * @param direction direction to place ship
+         * @param ship ship to be placed
+         * @return true if ship is placed, false if not
+         */
     private boolean putShip(int x, int y, int direction, Symbol ship){
         Symbol[][] temp = makeDeepClone(grid);
         //Up
