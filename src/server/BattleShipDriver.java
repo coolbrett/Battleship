@@ -48,7 +48,7 @@ public class BattleShipDriver {
                     if (!playerOne.equalsIgnoreCase(playerTwo)){
                         toggle = false;
                         game = new Game(size, new ArrayList<>(Arrays.asList(playerOne, playerTwo)), scanner);
-                        System.out.println("here");
+                        game.start();
                         scanner.close();
                     }
                 }

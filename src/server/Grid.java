@@ -13,6 +13,9 @@ public class Grid {
     /** Grid field for Grid class */
     private Symbol[][] grid;
 
+    /** Grid based on grid field, just hits and misses */
+    private Symbol[][] altGrid;
+
     /** Username field */
     private String username;
 
@@ -22,6 +25,8 @@ public class Grid {
     /** Random generator */
     private final Random random = new Random();
 
+    private int hitPoints = 0;
+
     /**
      * Constructor for creating a Grid
      * @param size size for grid field to be
@@ -30,6 +35,7 @@ public class Grid {
         this.size = size;
         this.username = username;
         this.grid = new Symbol[size][size];
+        this.altGrid = new Symbol[size][size];
         fillGrid();
         placeShips();
         //System.out.println("Grid built!");
@@ -112,6 +118,19 @@ public class Grid {
         }
     }
 
+    private void tryUp(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions, boolean shipPlaced){
+        if ((y - ship.getSize()) < size && y - ship.getSize() > -1) {
+            if (putShip(x, y, direction, ship)) {
+                shipPlaced = true;
+            }else{
+                //System.out.println("Failed to place " + ship.getSize());
+                directions.remove(Integer.valueOf(direction));
+            }
+        }else {
+            directions.remove(Integer.valueOf(direction));
+        }
+    }
+
     /**
      * Helper method to place a single ship
      * @param x x coordinate to start placement
@@ -185,6 +204,7 @@ public class Grid {
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size; j++){
                 grid[i][j] = Symbol.EMPTY;
+                altGrid[i][j] = Symbol.EMPTY;
             }
         }
     }
@@ -228,8 +248,8 @@ public class Grid {
         for(int i = 0; i < shipCount; i++){
             Symbol ship = possibleShips.get(random.nextInt((possibleShips.size())));
             shipsToPlace.add(ship);
+            hitPoints += ship.getSize();
         }
-
         return shipsToPlace.toArray(new Symbol[0]);
     }
 
@@ -253,14 +273,14 @@ public class Grid {
      * toString method to nicely format the grid
      * @return nicely formatted grid
      */
-    public String toString() {
+    public String toString(Symbol[][] grid) {
         String board = "";
         String space = " ";
         String columnHeader = " ";
         for (int i = 0; i < size; i++) {
             columnHeader = columnHeader + "   " + String.valueOf(i);
         }
-        board += columnHeader + "\n";
+        board += username + "'s board:\n" + columnHeader + "\n";
 
         String body = "  ";
         String inBetween = "+---";
@@ -298,7 +318,17 @@ public class Grid {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+
+    public int getHitPoints() {
+        return hitPoints;
     }
+
+    public void setHitPoints(int hitPoints) {
+        this.hitPoints = hitPoints;
+    }
+
+    public Symbol[][] getAltGrid() {
+        return altGrid;
+    }
+
 }
