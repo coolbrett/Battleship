@@ -101,7 +101,16 @@ public class Grid {
         }
         return false;
     }
-
+    
+  /**
+     * Method to try and place ship going right from point
+     *
+     * @param x Integer for x coordinate
+     * @param y Integer for y coordinate
+     * @param ship Symbol representation of the ship 
+     * @param direction Integer of direction to go
+     * @param directions Integer arraylist of all directions to go
+     */
     private boolean tryRight(int x, int y, Symbol ship, int direction, 
                              ArrayList<Integer> directions) {
         if (x + ship.getSize() < size && x + ship.getSize() > -1) {
@@ -116,6 +125,15 @@ public class Grid {
         return false;
     }
 
+      /**
+     * Method to try and place ship going down from point
+     *
+     * @param x Integer for x coordinate
+     * @param y Integer for y coordinate
+     * @param ship Symbol representation of the ship 
+     * @param direction Integer of direction to go
+     * @param directions Integer arraylist of all directions to go
+     */
     private boolean tryDown(int x, int y, Symbol ship, int direction, 
                             ArrayList<Integer> directions) {
         if ((y + ship.getSize()) < size && y + ship.getSize() > -1) {
@@ -130,6 +148,15 @@ public class Grid {
         return false;
     }
 
+      /**
+     * Method to try and place ship going left from point
+     *
+     * @param x Integer for x coordinate
+     * @param y Integer for y coordinate
+     * @param ship Symbol representation of the ship 
+     * @param direction Integer of direction to go
+     * @param directions Integer arraylist of all directions to go
+     */
     private boolean tryLeft(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
         if (x - ship.getSize() < size && x - ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
