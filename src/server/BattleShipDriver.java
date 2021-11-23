@@ -10,6 +10,7 @@ import java.util.Scanner;
  *
  * @author Brett Dale
  * @author Katherine Blanton
+ * @version 11/22/2021
  */
 
 public class BattleShipDriver {
@@ -21,13 +22,15 @@ public class BattleShipDriver {
     private final static int argSize = 0;
 
     /**
-     *
+     * Main method that checks the args and calls other classes to play a game of Battleship
      *
      * @param args the command line args The first arg being the port and the second being the grid
      *             size.
+     * @throws NumberFormatException If command arg is not an integer
      */
     public static void main(String[] args){
 
+        //checking for arg length of 1
         if (args.length == 1){
             try{
                 int size = Integer.parseInt(args[argSize]);
@@ -35,10 +38,12 @@ public class BattleShipDriver {
                     size = DEFAULT_SIZE;
                 }
 
+                //getting player 1 username
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter username for Player One: ");
                 String playerOne = scanner.next();
 
+                //getting player 2 username and checking for if same as player 1
                 boolean toggle = true;
                 String playerTwo;
                 Game game;
@@ -47,29 +52,18 @@ public class BattleShipDriver {
                     playerTwo = scanner.next();
                     if (!playerOne.equalsIgnoreCase(playerTwo)){
                         toggle = false;
-                        game = new Game(size, new ArrayList<>(Arrays.asList(playerOne, playerTwo)), scanner);
+                        game = new Game(size, new ArrayList<>
+                                       (Arrays.asList(playerOne, playerTwo)), scanner);
                         game.start();
                         scanner.close();
                     }
                 }
-
-                /*
-                while (!game.getGameOver()){
-                    //Player One turn
-                    //check win condition
-                    //Player Two condition
-                    //check win condition
-                    //if win == true
-                    game.setGameOver(true);
-                }*/
-
-
             }catch(NumberFormatException e){
                 System.out.println("Error! " + e.getMessage());
                 System.exit(2);
             }
         }else{
-            System.out.println("Usage: java portNumber [BoardSize]");
+            System.out.println("Usage: java BoardSize");
             System.exit(1);
         }
     }
