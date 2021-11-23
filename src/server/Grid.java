@@ -25,6 +25,7 @@ public class Grid {
     /** Random generator */
     private final Random random = new Random();
 
+    /** The total number of the size of ships on the grid aka hitpoints */
     private int hitPoints = 0;
 
     /**
@@ -38,7 +39,6 @@ public class Grid {
         this.altGrid = new Symbol[size][size];
         fillGrid();
         placeShips();
-        //System.out.println("Grid built!");
     }
 
     /**
@@ -59,7 +59,7 @@ public class Grid {
                 //Up = 1, Right = 2, Down = 3, Left = 4
                 int direction = directions.get(random.nextInt(directions.size()));
 
-                //Up
+                    //Up
                 if (direction == 1) {
                     shipPlaced = tryUp(x, y, ship, direction, directions);
                     //Right
@@ -79,7 +79,17 @@ public class Grid {
         }
     }
 
-    private boolean tryUp(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions){
+    /**
+     * Method to try and place ship going up from point
+     *
+     * @param x Integer for x coordinate
+     * @param y Integer for y coordinate
+     * @param ship Symbol representation of the ship 
+     * @param direction Integer of direction to go
+     * @param directions Integer arraylist of all directions to go
+     */
+    private boolean tryUp(int x, int y, Symbol ship, int direction, 
+                          ArrayList<Integer> directions){
         if ((y - ship.getSize()) < size && y - ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
                 return true;
@@ -92,7 +102,8 @@ public class Grid {
         return false;
     }
 
-    private boolean tryRight(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+    private boolean tryRight(int x, int y, Symbol ship, int direction, 
+                             ArrayList<Integer> directions) {
         if (x + ship.getSize() < size && x + ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
                 return true;
@@ -105,7 +116,8 @@ public class Grid {
         return false;
     }
 
-    private boolean tryDown(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+    private boolean tryDown(int x, int y, Symbol ship, int direction, 
+                            ArrayList<Integer> directions) {
         if ((y + ship.getSize()) < size && y + ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
                 return true;
@@ -131,23 +143,22 @@ public class Grid {
         return false;
     }
 
-        /**
-         * Helper method to place a single ship
-         * @param x x coordinate to start placement
-         * @param y y coordinate to start placement
-         * @param direction direction to place ship
-         * @param ship ship to be placed
-         * @return true if ship is placed, false if not
-         */
+    /**
+     * Helper method to place a single ship
+     *
+     * @param x x coordinate to start placement
+     * @param y y coordinate to start placement
+     * @param direction direction to place ship
+     * @param ship ship to be placed
+     * @return true if ship is placed, false if not
+     */
     private boolean putShip(int x, int y, int direction, Symbol ship){
         Symbol[][] temp = makeDeepClone(grid);
         //Up
         if (direction == 1){
-            //System.out.printf("\nTrying to place %s going UP\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y-i][x] == Symbol.EMPTY){
                     temp[y-i][x] = ship;
-                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y-i, x);
                 }else {
                     return false;
                 }
@@ -155,39 +166,29 @@ public class Grid {
             grid = makeDeepClone(temp);
         }//Right
         else if (direction == 2) {
-            //System.out.printf("\nTrying to place %s going RIGHT\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y][x+i] == Symbol.EMPTY){
                     temp[y][x+i] = ship;
-                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x+i);
-
                 }else {
                     return false;
                 }
             }
             grid = makeDeepClone(temp);
-
         }//Down
         else if (direction == 3){
-            //System.out.printf("\nTrying to place %s going DOWN\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y+i][x] == Symbol.EMPTY){
                     temp[y+i][x] = ship;
-                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y+i, x);
                 }else {
                     return false;
                 }
             }
             grid = makeDeepClone(temp);
-
         }//Left
         else if (direction == 4){
-            //System.out.printf("\nTrying to place %s going LEFT\n", ship.getName());
             for (int i = 0; i < ship.getSize(); i++){
                 if (grid[y][x-i] == Symbol.EMPTY){
                     temp[y][x-i] = ship;
-                    //System.out.printf("\n%s placed at [%x][%x]\n", ship.getName(), y, x-i);
-
                 }else {
                     return false;
                 }
@@ -211,6 +212,7 @@ public class Grid {
 
     /**
      * Helper method to get number of ships to be placed
+     *
      * @return number of ships to be placed
      */
     private int determineShipCount(){
@@ -237,6 +239,7 @@ public class Grid {
 
     /**
      * Helper method to determine what ships will be placed on the board
+     *
      * @return Array containing which ships to place
      */
     private Symbol[] determineShipsToPlace(int shipCount){
@@ -255,6 +258,7 @@ public class Grid {
 
     /**
      * Getter method for grid field
+     *
      * @return grid field
      */
     public Symbol[][] getGrid() {
@@ -263,6 +267,7 @@ public class Grid {
 
     /**
      * Getter method for size of grid
+     *
      * @return size of grid
      */
     public int getSize() {
@@ -271,12 +276,14 @@ public class Grid {
 
     /**
      * toString method to nicely format the grid
+     *
      * @return nicely formatted grid
      */
     public String toString(Symbol[][] grid) {
         String board = "";
         String space = " ";
         String columnHeader = " ";
+        //to get the numbers at the top of the grid
         for (int i = 0; i < size; i++) {
             columnHeader = columnHeader + "   " + String.valueOf(i);
         }
@@ -285,14 +292,17 @@ public class Grid {
         String body = "  ";
         String inBetween = "+---";
         String lines = "| ";
+        //to create the border lines in between the rows
         for (int i = 0; i < size; i++) {
             body = body + (inBetween);
         }
         body += "+";
         board += body + "\n";
 
+        //to add the border lines 
         for (int i = 0; i < grid.length; i++){
             board += i + space;
+            //To add the rows with numbers at the front
             for (int j = 0; j < grid.length; j++){
                 board += lines + grid[j][i].getSymbol() + space;
             }
@@ -303,6 +313,7 @@ public class Grid {
 
     /**
      * Helper method to create a deep clone of a 2D array
+     * 
      * @param array 2D array to clone
      * @return Deep clone of 2D array passed
      */
@@ -314,19 +325,38 @@ public class Grid {
         return temp;
     }
 
+    /**
+     * A Getter method to get the username
+     * 
+     * @return username The username associated with a grid of a player
+     */
     public String getUsername() {
         return username;
     }
 
-
+    /**
+     * Getter method to get the hit points
+     *
+     * @return hitPoints The number of total ship coordinates to hit
+     */
     public int getHitPoints() {
         return hitPoints;
     }
 
+    /**
+     * Setter method to set the number of hitpoints a grid has 
+     *
+     * @param hitPoints The number of ship coordinates to hit
+     */
     public void setHitPoints(int hitPoints) {
         this.hitPoints = hitPoints;
     }
 
+    /**
+     * Getter method to get the alternate version of the grid
+     *
+     * @return altGrid The alternate version of the board with no ships shown
+     */
     public Symbol[][] getAltGrid() {
         return altGrid;
     }
