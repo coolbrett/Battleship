@@ -21,7 +21,6 @@ public class BattleDriver {
             System.out.println("USAGE: java client.BattleDriver <HOST> <PORT> <USERNAME>");
             System.exit(1);
         }else {
-            //CMA checks
             try{
 
                 BattleClient battleClient = new BattleClient(args[0], Integer.parseInt(args[1]), args[2]);
