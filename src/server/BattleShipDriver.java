@@ -19,7 +19,7 @@ public class BattleShipDriver {
     private final static int DEFAULT_SIZE = 10;
 
     /** Arg index for board size */
-    private final static int argSize = 0;
+    private final static int argSize = 1;
 
     /**
      * Main method that checks the args and calls other classes to play a game of Battleship
@@ -28,7 +28,7 @@ public class BattleShipDriver {
      *             size.
      * @throws NumberFormatException If command arg is not an integer
      */
-    public static void main(String[] args){
+    /**public static void main(String[] args){
 
         //checking for arg length of 1
         if (args.length == 1){
@@ -53,7 +53,7 @@ public class BattleShipDriver {
                     if (!playerOne.equalsIgnoreCase(playerTwo)){
                         toggle = false;
                         game = new Game(size, new ArrayList<>
-                                       (Arrays.asList(playerOne, playerTwo)), scanner);
+                                (Arrays.asList(playerOne, playerTwo)), scanner);
                         game.start();
                         scanner.close();
                     }
@@ -63,6 +63,30 @@ public class BattleShipDriver {
                 System.exit(2);
             }
         }else{
+            System.out.println("Usage: java BoardSize");
+            System.exit(1);
+        }
+    }*/
+
+    public static void main(String[] args) {
+
+        //checking for arg length of 1 or 2
+        if (args.length == 2 || args.length == 1) {
+            try {
+                int size = DEFAULT_SIZE;
+                if (args.length == 2){
+                    size = Integer.parseInt(args[argSize]);
+                    if (size < 5 || size > 10) {
+                        size = DEFAULT_SIZE;
+                    }
+                }
+                BattleServer server = new BattleServer(Integer.parseInt(args[0]));
+                server.listen();
+            } catch (NumberFormatException | IOException e) {
+                System.out.println("Error! " + e.getMessage());
+                System.exit(2);
+            }
+        } else {
             System.out.println("Usage: java BoardSize");
             System.exit(1);
         }
