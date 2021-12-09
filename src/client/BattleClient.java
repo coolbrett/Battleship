@@ -1,9 +1,12 @@
 package client;
 
+import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
@@ -13,7 +16,6 @@ import java.net.UnknownHostException;
  * @author Katherine Blanton
  */
 public class BattleClient extends MessageSource implements MessageListener {
-    // TODO: 11/15/2021 The Client needs a ConnectionAgent instance somewhere
 
     /**Host client will connect to */
     private final InetAddress host;
@@ -24,6 +26,9 @@ public class BattleClient extends MessageSource implements MessageListener {
     /**Username client is assigned */
     private final String username;
 
+    /**Connection Agent for each Battle Client */
+    private ConnectionAgent connectionAgent;
+
     /**
      * Constructor for Battle Client
      * @param host host to connect to
@@ -31,7 +36,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      * @param username username to be assigned to client
      * @throws UnknownHostException if host is not valid
      */
-    public BattleClient(String host, int port, String username) throws UnknownHostException {
+    public BattleClient(String host, int port, String username) throws IOException {
         this.host = InetAddress.getByName(host);
         this.port = port;
         this.username = username;
@@ -45,7 +50,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      */
     @Override
     public void messageReceived(String message, MessageSource source) {
-
+        this.notifyReceipt(message);
     }
 
     /**
@@ -56,21 +61,24 @@ public class BattleClient extends MessageSource implements MessageListener {
      */
     @Override
     public void sourceClosed(MessageSource source) {
-
+        source.removeMessageListener(this);
     }
 
     /**
-     *
+     * Sends message to server
      * @param message message to send
      */
     public void send(String message){
-        // TODO: 11/15/2021 Find out what this method does, and write it's docs
+        this.connectionAgent.sendMessage(message);
     }
 
     /**
-     *
+     * Connects to a socket, then starts the Connection Agent field
      */
-    public void connect(){
-        // TODO: 11/15/2021 Find out what this method does, and write it's docs
+    public void connect() throws IOException {
+        this.connectionAgent = new ConnectionAgent(new Socket(host, port));
+        this.connectionAgent.addMessageListener(this);
+        this.connectionAgent.getThread().start();
+        this.send("/battle " + username);
     }
 }
