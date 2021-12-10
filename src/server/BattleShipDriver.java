@@ -80,9 +80,9 @@ public class BattleShipDriver {
                         size = DEFAULT_SIZE;
                     }
                 }
-                BattleServer server = new BattleServer(Integer.parseInt(args[0]));
+                BattleServer server = new BattleServer(Integer.parseInt(args[0]), size);
                 server.listen();
-            } catch (NumberFormatException | IOException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Error! " + e.getMessage());
                 System.exit(2);
             }
