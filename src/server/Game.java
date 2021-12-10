@@ -18,7 +18,7 @@ public class Game {
     private String command;
     /** arraylist of the grids in the game */
     private ArrayList<Grid> grids;
-    /** Grid of the current player who's turn it is */
+    /** Grid of the current player whose turn it is */
     private Grid currentPlayer;
     /** to tell if a game is in session or not */
     private boolean running = false;

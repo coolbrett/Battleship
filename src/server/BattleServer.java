@@ -94,14 +94,47 @@ public class BattleServer implements MessageListener {
         }
     }
 
+    /**
+     * Server receives commands from clients and handles those commands appropriately
+     * @param message The message received by the subject
+     * @param source The source from which this message originated (if needed).
+     */
     @Override
     public void messageReceived(String message, MessageSource source) {
-        if (message.equals("/start")){
-            if (connectionAgentsList.size() > 1){
-                broadcast("The game begins\n");
-            }else {
-                broadcast("Not enough players to play the game\n");
-            }
+
+        //double-backslash s would represent any whitespace
+        //breaks command into an array
+        String[] argsFromCommand = message.split("\\s");
+
+        switch (argsFromCommand[0]){
+            case "/battle":
+                if (argsFromCommand.length == 2) {
+                    broadcast("!!! " + argsFromCommand[1] + " has entered the battle");
+                    //associate usernames with message sources
+
+                }else {
+                    ConnectionAgent temp = (ConnectionAgent) source;
+                    temp.sendMessage("Invalid arguments for /battle");
+                }
+                break;
+            case "/start":
+                //handle start
+                break;
+            case "/fire":
+                //handle fire
+                break;
+            case "/display":
+                //handle display
+                break;
+            case "/surrender":
+                //handle surrender
+                break;
+            default:
+                //invalid command
+                //send message back to client
+                ConnectionAgent temp = (ConnectionAgent) source;
+                temp.sendMessage("Invalid command type");
+
         }
     }
 
@@ -121,6 +154,6 @@ public class BattleServer implements MessageListener {
             }
         }
         source.removeMessageListener(this);
-        this.connectionAgentsList.remove(source);
+        this.connectionAgentsList.remove((ConnectionAgent) source);
     }
 }
