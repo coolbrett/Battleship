@@ -39,7 +39,7 @@ public class BattleServer implements MessageListener {
      */
     public BattleServer(int port, int size) {
         this.port = port;
-        //Game object initialization, use size here
+        this.game = new Game(size);
         this.connectionAgentsList = new ArrayList<>();
         this.current = 0;
     }
@@ -62,21 +62,6 @@ public class BattleServer implements MessageListener {
                 agent.addMessageListener(this);
                 this.connectionAgentsList.add(agent);
                 agent.getThread().start();
-
-                // Create readers to read data being sent by client
-                InputStreamReader inStream = new InputStreamReader(sock.getInputStream());
-                BufferedReader buffer = new BufferedReader(inStream);
-
-                // Get the socket output stream and wrap it to write objects
-                OutputStream sockOut = sock.getOutputStream();
-                ObjectOutputStream outStream = new ObjectOutputStream(sockOut);
-
-                // Close streams for this connection
-                sock.close();
-                inStream.close();
-                buffer.close();
-                sockOut.close();
-                outStream.close();
             }
             serverSocket.close();
         } catch (IOException e) {
@@ -101,41 +86,16 @@ public class BattleServer implements MessageListener {
      */
     @Override
     public void messageReceived(String message, MessageSource source) {
-
-        //double-backslash s would represent any whitespace
-        //breaks command into an array
-        String[] argsFromCommand = message.split("\\s");
-
-        switch (argsFromCommand[0]){
-            case "/battle":
-                if (argsFromCommand.length == 2) {
-                    broadcast("!!! " + argsFromCommand[1] + " has entered the battle");
-                    //associate usernames with message sources
-
-                }else {
-                    ConnectionAgent temp = (ConnectionAgent) source;
-                    temp.sendMessage("Invalid arguments for /battle");
+        String sender = "";
+        if (!message.contains("/battle")){
+            for (int i = 0; i < connectionAgentsList.size(); i++) {
+                if (connectionAgentsList.get(i) == source) {
+                    sender = this.game.getGrids().get(i).getUsername();
                 }
-                break;
-            case "/start":
-                //handle start
-                break;
-            case "/fire":
-                //handle fire
-                break;
-            case "/display":
-                //handle display
-                break;
-            case "/surrender":
-                //handle surrender
-                break;
-            default:
-                //invalid command
-                //send message back to client
-                ConnectionAgent temp = (ConnectionAgent) source;
-                temp.sendMessage("Invalid command type");
-
+            }
         }
+        //send command to game
+        game.handleCommand(message, sender);
     }
 
     /**
