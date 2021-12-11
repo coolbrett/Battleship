@@ -127,24 +127,24 @@ public class BattleServer implements MessageListener {
             boolean started = game.start();
             if (!started && agent != null){
                 agent.sendMessage("Not enough players to start!");
+            }else{
+                broadcast("The game has begins\n" + game.getCurrentPlayer().getUsername() + " it is your turn");
             }
         }else if (message.contains("/fire")){
             if (game.getRunning()) {
                 String[] commands = message.split("\\s");
                 if(commands.length == 4) {
-                    for (int i = 0; i < game.getGrids().size(); i++) {
-                        if (sender.equals(game.getCurrentPlayer().getUsername())) {
-                            boolean fired = game.fire(commands);
-                            if (fired){
-                                String target = commands[3];
-                                broadcast("Shots fired at " + target + " by " + sender);
-                                // TODO: 12/11/2021 Check hitpoints of target to see if they need to surrender
-                                broadcast(game.getCurrentPlayer() + " it is your turn");
-                            }
-                        } else {
-                            if (agent != null) {
-                                agent.sendMessage("Move Failed, player turn: " + game.getCurrentPlayer().getUsername());
-                            }
+                    if (sender.equals(game.getCurrentPlayer().getUsername())) {
+                        boolean fired = game.fire(commands);
+                        if (fired){
+                            String target = commands[3];
+                            broadcast("Shots fired at " + target + " by " + sender);
+                            // TODO: 12/11/2021 Check hitpoints of target to see if they need to surrender
+                            broadcast(game.getCurrentPlayer().getUsername() + " it is your turn");
+                        }
+                    } else {
+                        if (agent != null) {
+                            agent.sendMessage("Move Failed, player turn: " + game.getCurrentPlayer().getUsername());
                         }
                     }
                 }else{
@@ -160,6 +160,7 @@ public class BattleServer implements MessageListener {
         }else if (message.contains("/surrender")){
             game.surrender(sender);
             broadcast("!!! " + sender + " surrendered");
+            sourceClosed(source);
         }else if (message.contains("/display")){
             //grabs username from command
             String[] displayCommand = message.split("\\s");

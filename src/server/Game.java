@@ -41,6 +41,7 @@ public class Game {
         if (!running) {
             if (grids.isEmpty()) {
                 grids.add(new Grid(this.size, username));
+                currentPlayer = grids.get(0);
                 return true;
             } else {
                 //look to see if username already exists in game
@@ -137,6 +138,7 @@ public class Game {
                     if (spot == Symbol.EMPTY) {
                         grids.get(i).getGrid()[column][row] = Symbol.MISS;
                         grids.get(i).getAltGrid()[column][row] = Symbol.MISS;
+                        fired = true;
                     }else if (spot == Symbol.HIT || spot == Symbol.MISS){
                         return fired;
                     }else{
@@ -149,9 +151,9 @@ public class Game {
                         if (grids.get(i).getHitPoints() == 0){
                             surrender(grids.get(i).getUsername());
                         }
+                        i = grids.size();
                     }
                 }
-                i = grids.size();
             }
         }
         incrementCurrentPlayer();
