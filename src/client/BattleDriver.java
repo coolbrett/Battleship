@@ -28,6 +28,7 @@ public class BattleDriver {
                 battleClient.connect();
 
                 Scanner scanner = new Scanner(System.in);
+                System.out.print("Type command: ");
                 String command = "";
                 while (!command.equalsIgnoreCase("/surrender")){
                     command = scanner.nextLine();

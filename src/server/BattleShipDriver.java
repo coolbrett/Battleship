@@ -28,45 +28,6 @@ public class BattleShipDriver {
      *             size.
      * @throws NumberFormatException If command arg is not an integer
      */
-    /**public static void main(String[] args){
-
-        //checking for arg length of 1
-        if (args.length == 1){
-            try{
-                int size = Integer.parseInt(args[argSize]);
-                if (size < 5 || size > 10){
-                    size = DEFAULT_SIZE;
-                }
-
-                //getting player 1 username
-                Scanner scanner = new Scanner(System.in);
-                System.out.print("Enter username for Player One: ");
-                String playerOne = scanner.next();
-
-                //getting player 2 username and checking for if same as player 1
-                boolean toggle = true;
-                String playerTwo;
-                Game game;
-                while(toggle) {
-                    System.out.print("\nEnter username for Player Two: ");
-                    playerTwo = scanner.next();
-                    if (!playerOne.equalsIgnoreCase(playerTwo)){
-                        toggle = false;
-                        game = new Game(size, new ArrayList<>
-                                (Arrays.asList(playerOne, playerTwo)), scanner);
-                        game.start();
-                        scanner.close();
-                    }
-                }
-            }catch(NumberFormatException e){
-                System.out.println("Error! " + e.getMessage());
-                System.exit(2);
-            }
-        }else{
-            System.out.println("Usage: java BoardSize");
-            System.exit(1);
-        }
-    }*/
 
     public static void main(String[] args) {
 

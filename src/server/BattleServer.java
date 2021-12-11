@@ -87,15 +87,43 @@ public class BattleServer implements MessageListener {
     @Override
     public void messageReceived(String message, MessageSource source) {
         String sender = "";
+
+        //Get agent to send message to if something they send doesn't go through
+        //can be turned into helper method
+        ConnectionAgent agent = null;
+        for (ConnectionAgent connectionAgent : connectionAgentsList) {
+            if (connectionAgent == source) {
+                agent = connectionAgent;
+            }
+        }
+
+        //This if handles all commands that are not /battle
         if (!message.contains("/battle")){
+            //This for loop determines who the sender of the command is
+            //can be turned into a helper method
             for (int i = 0; i < connectionAgentsList.size(); i++) {
                 if (connectionAgentsList.get(i) == source) {
                     sender = this.game.getGrids().get(i).getUsername();
+                    System.out.printf("Sender is: %s\n", sender);
                 }
             }
+        }else{
+            //This code handles /battle command to create new player
+            sender = message.split(" ")[1];
+            System.out.println("Received /battle from: " + sender);
+            boolean added = game.battle(sender);
+            if (!added && agent != null){
+                agent.sendMessage("Username taken! Use /battle command with new username!");
+            }
         }
-        //send command to game
-        game.handleCommand(message, sender);
+
+        if (message.contains("/start")){
+            boolean started = game.start();
+            if (!started && agent != null){
+                agent.sendMessage("Not enough players to start!");
+            }
+        }
+
     }
 
     /**

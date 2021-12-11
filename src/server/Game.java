@@ -29,13 +29,53 @@ public class Game {
      */
     public Game(int size){
         this.size = size;
+        this.grids = new ArrayList<>();
     }
 
-    public void handleCommand(String command, String sender){
-        //battle, start, fire, display, surrender
+    /**
+     * Creates a new player with username passed in if username is not taken
+     * @param username username to attach to grid.
+     * @return true if player was added, false otherwise
+     */
+    public boolean battle(String username){
+        if(grids.isEmpty()) {
+            grids.add(new Grid(this.size, username));
+            return true;
+        }else{
+            //look to see if username already exists in game
+            boolean found = false;
+            for (int i = 0; i < grids.size(); i++) {
+                Grid grid = grids.get(i);
+                if (grid.getUsername().equalsIgnoreCase(username)) {
+                    found = true;
+                    i = grids.size();
+                }
+            }
 
+            if (!found){
+                grids.add(new Grid(this.size, username));
+                return true;
+            }
+        }
+        return false;
     }
 
+    /**
+     * Method to handle start command
+     * @return true if game started, false otherwise
+     */
+    public boolean start() {
+        if (grids.size() > 1) {
+            running = true;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Getter method to retrieve grids field
+     * @return grids field
+     */
     public ArrayList<Grid> getGrids() {
         return grids;
     }
