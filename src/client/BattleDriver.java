@@ -28,11 +28,15 @@ public class BattleDriver {
                 battleClient.connect();
 
                 Scanner scanner = new Scanner(System.in);
-                System.out.print("Type command: ");
                 String command = "";
+                System.out.println("\nType commands once it's your turn!");
                 while (!command.equalsIgnoreCase("/surrender")){
                     command = scanner.nextLine();
-                    battleClient.send(command);
+                    if (!command.contains("/battle")) {
+                        battleClient.send(command);
+                    }else{
+                        System.out.println("Cannot join game more than once!");
+                    }
                 }
                 scanner.close();
 
