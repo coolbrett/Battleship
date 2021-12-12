@@ -52,13 +52,10 @@ public class BattleServer implements MessageListener {
         try {
             // Create a TCP socket to send data through
             serverSocket = new ServerSocket(this.port);
-            System.out.println("Server started on port: " + port);
-
             // While the server socket is not closed
             while (!serverSocket.isClosed()) {
                 // Accept an incoming connection
                 Socket sock = serverSocket.accept();
-                System.out.println("Socket made on port: " + sock.getLocalPort());
                 ConnectionAgent agent = new ConnectionAgent(sock);
                 agent.addMessageListener(this);
                 this.connectionAgentsList.add(agent);
@@ -87,7 +84,6 @@ public class BattleServer implements MessageListener {
      */
     @Override
     public void messageReceived(String message, MessageSource source) {
-        System.out.println("Received: " + message);
         String sender = "";
         ConnectionAgent agent = getAgent(source);
 
@@ -279,7 +275,6 @@ public class BattleServer implements MessageListener {
         String sender;
         //This code handles /battle command to create new player
         sender = message.split(" ")[1];
-        System.out.println("Received /battle from: " + sender);
         boolean added = game.battle(sender);
         if (!added && agent != null){
             agent.sendMessage("Username taken! Use /battle command with new username!");
@@ -302,7 +297,6 @@ public class BattleServer implements MessageListener {
         for (int i = 0; i < connectionAgentsList.size(); i++) {
             if (connectionAgentsList.get(i) == source) {
                 sender = this.game.getGrids().get(i).getUsername();
-                System.out.printf("Sender is: %s\n", sender);
             }
         }
         return sender;
@@ -332,7 +326,6 @@ public class BattleServer implements MessageListener {
         for (ConnectionAgent agent : connectionAgentsList){
             if (agent == source){
                 try {
-                    System.out.println("Closing player");
                     agent.close();
                 }catch (IOException e){
                     e.printStackTrace();

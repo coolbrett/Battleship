@@ -158,7 +158,6 @@ public class Game {
                         grids.get(i).getGrid()[column][row] = Symbol.HIT;
                         grids.get(i).getAltGrid()[column][row] = Symbol.HIT;
                         grids.get(i).setHitPoints(grids.get(i).getHitPoints() - 1);
-                        System.out.println("Hit points: " + grids.get(i).getHitPoints());
                         fired = true;
                         i = grids.size();
                     }

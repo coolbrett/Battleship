@@ -42,7 +42,6 @@ public class ConnectionAgent extends MessageSource implements Runnable{
      * @param message message to send
      */
     public void sendMessage(String message){
-        System.out.println("Sending: " + message);
         this.out.println(message);
     }
 
@@ -62,7 +61,6 @@ public class ConnectionAgent extends MessageSource implements Runnable{
         socket.close();
         in.close();
         out.close();
-        //Questionable
         thread.interrupt();
     }
 

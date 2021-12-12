@@ -39,7 +39,6 @@ public class BattleDriver {
                     }
                 }
                 scanner.close();
-                System.out.println("Closing client");
                 System.exit(1);
 
             } catch (UnknownHostException e) {
