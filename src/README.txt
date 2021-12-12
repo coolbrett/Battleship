@@ -8,8 +8,8 @@ Description: This program is meant to allow multiple players to play a game of B
 ---------------------------------------------------------------------------------------------------------------------------------
 Compile: javac ./client/*.java ./common/*.java ./server/*.java
 
-Usage:   java ./server/BattleShipDriver portNumber [GridSize]
-         java ./client/BattleDriver localhost portNumber username
+Usage:   java server.BattleShipDriver <portNumber> <Board Size>
+         java client.BattleDriver <Host> <portNumber> <username>
 ---------------------------------------------------------------------------------------------------------------------------------
 
 Files Needed:  client/BattleClient.java
