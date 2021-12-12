@@ -145,30 +145,28 @@ public class Game {
                         //should be a ship at this point
                         grids.get(i).getGrid()[column][row] = Symbol.HIT;
                         grids.get(i).getAltGrid()[column][row] = Symbol.HIT;
-                        fired = true;
-
                         grids.get(i).setHitPoints(grids.get(i).getHitPoints() - 1);
-                        if (grids.get(i).getHitPoints() == 0){
-                            surrender(grids.get(i).getUsername());
-                        }
+                        System.out.println("Hit points: " + grids.get(i).getHitPoints());
+                        fired = true;
                         i = grids.size();
                     }
                 }
             }
+        }else{
+            return false;
         }
-        incrementCurrentPlayer();
         return fired;
     }
 
     /**
      * Method to move to the next player's turn
      */
-    private void incrementCurrentPlayer() {
+    public void incrementCurrentPlayer() {
         for (int i = 0; i < grids.size(); i++) {
             if (currentPlayer.getUsername().equals(grids.get(i).getUsername())){
-                if (i == (grids.size() - 1)){
+                if (i == (grids.size() - 1) || grids.size() == 1){
                     currentPlayer = grids.get(0);
-                }else{
+                } else{
                     currentPlayer = grids.get(i + 1);
                 }
                 i = grids.size();
@@ -176,14 +174,26 @@ public class Game {
         }
     }
 
-    public void surrender(String username) {
-        Grid gridToRemove = null;
-        for (int i = 0; i < grids.size(); i++) {
-            if (grids.get(i).getUsername().equals(username)){
-                gridToRemove = grids.get(i);
-                i = grids.size();
+
+    public boolean surrender(String username) {
+        if (currentPlayer.getUsername().equals(username)) {
+            Grid gridToRemove = null;
+            for (int i = 0; i < grids.size(); i++) {
+                if (grids.get(i).getUsername().equals(username)) {
+                    gridToRemove = grids.get(i);
+                    i = grids.size();
+                }
             }
+            grids.remove(gridToRemove);
+
+            incrementCurrentPlayer();
+
+            if (grids.size() == 1) {
+                gameOver = true;
+                running = false;
+            }
+            return true;
         }
-        grids.remove(gridToRemove);
+        return false;
     }
 }

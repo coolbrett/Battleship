@@ -124,25 +124,59 @@ public class BattleServer implements MessageListener {
         }
 
         if (message.contains("/start")){
-            boolean started = game.start();
-            if (!started && agent != null){
-                agent.sendMessage("Not enough players to start!");
-            }else{
-                broadcast("The game has begins\n" + game.getCurrentPlayer().getUsername() + " it is your turn");
+            if (!game.getRunning()) {
+                boolean started = game.start();
+                if (!started && agent != null) {
+                    agent.sendMessage("Not enough players to start!");
+                } else {
+                    broadcast("The game begins\n" + game.getCurrentPlayer().getUsername() + " it is your turn");
+                }
             }
         }else if (message.contains("/fire")){
             if (game.getRunning()) {
                 String[] commands = message.split("\\s");
                 if(commands.length == 4) {
                     if (sender.equals(game.getCurrentPlayer().getUsername())) {
-                        boolean fired = game.fire(commands);
-                        if (fired){
-                            String target = commands[3];
-                            broadcast("Shots fired at " + target + " by " + sender);
-                            // TODO: 12/11/2021 Check hitpoints of target to see if they need to surrender
-                            broadcast(game.getCurrentPlayer().getUsername() + " it is your turn");
+                        String target = commands[3];
+                        if (!target.equals(sender)) {
+                            boolean fired = game.fire(commands);
+                            if (fired) {
+                                broadcast("Shots fired at " + target + " by " + sender);
+
+                                Grid gridToRemove = null;
+                                for (int i = 0; i < game.getGrids().size(); i++) {
+                                    if (game.getGrids().get(i).getHitPoints() == 0) {
+                                        gridToRemove = game.getGrids().get(i);
+                                        sourceClosed(connectionAgentsList.get(i));
+                                        broadcast("!!! " + game.getGrids().get(i).getUsername() + " ships were sunk");
+
+                                        if (game.getGrids().get(i).getUsername().equals(game.getCurrentPlayer().getUsername())) {
+                                            game.incrementCurrentPlayer();
+                                        }
+                                    }
+                                }
+
+                                if (gridToRemove != null) {
+                                    game.getGrids().remove(gridToRemove);
+                                }
+
+                                game.incrementCurrentPlayer();
+                                broadcast(game.getCurrentPlayer().getUsername() + " it is your turn");
+
+                                if (game.getGrids().size() == 1) {
+                                    broadcast("GAME OVER: " + game.getCurrentPlayer().getUsername() + " wins!");
+                                }
+                            } else {
+                                if (agent != null) {
+                                    agent.sendMessage("Fired off the grid, Username is not in game, or have fired there already. fire again!");
+                                }
+                            }
+                        }else{
+                            if (agent != null){
+                                agent.sendMessage("Move Failed, player turn: " + game.getCurrentPlayer().getUsername());
+                            }
                         }
-                    } else {
+                    }else {
                         if (agent != null) {
                             agent.sendMessage("Move Failed, player turn: " + game.getCurrentPlayer().getUsername());
                         }
@@ -157,24 +191,48 @@ public class BattleServer implements MessageListener {
                     agent.sendMessage("Game is not in progress");
                 }
             }
-        }else if (message.contains("/surrender")){
-            game.surrender(sender);
-            broadcast("!!! " + sender + " surrendered");
-            sourceClosed(source);
-        }else if (message.contains("/display")){
-            //grabs username from command
-            String[] displayCommand = message.split("\\s");
-            if (displayCommand.length == 2){
-                String usernameToDisplay = displayCommand[1];
-                Grid grid = game.display(usernameToDisplay);
-                if (game.getCurrentPlayer().getUsername().equals(grid.getUsername())){
-                    if (agent != null) {
-                        agent.sendMessage(grid.toString(grid.getGrid()));
+        }
+        else if (message.contains("/surrender")) {
+            if (game.getRunning()) {
+                boolean surrendered = game.surrender(sender);
+                if (surrendered) {
+                    sourceClosed(source);
+                    broadcast("!!! " + sender + " surrendered");
+                    if (game.getGrids().size() == 1) {
+                        broadcast("GAME OVER: " + game.getGrids().get(0).getUsername() + " wins!");
                     }
-                }else{
-                    if (agent != null) {
-                        agent.sendMessage(grid.toString(grid.getAltGrid()));
+                }
+            }else{
+                if (agent != null){
+                    agent.sendMessage("Play not in progress");
+                }
+            }
+        }else if (message.contains("/display")) {
+            if (game.getRunning()) {
+                //grabs username from command
+                String[] displayCommand = message.split("\\s");
+                if (displayCommand.length == 2) {
+                    String usernameToDisplay = displayCommand[1];
+                    Grid grid = game.display(usernameToDisplay);
+                    if (grid != null) {
+                        if (sender.equals(grid.getUsername())) {
+                            if (agent != null) {
+                                agent.sendMessage(grid.toString(grid.getGrid()));
+                            }
+                        } else {
+                            if (agent != null) {
+                                agent.sendMessage(grid.toString(grid.getAltGrid()));
+                            }
+                        }
+                    } else {
+                        if (agent != null) {
+                            agent.sendMessage("Username given is not found in this game, try again!");
+                        }
                     }
+                }
+            }else{
+                if (agent != null){
+                    agent.sendMessage("Play not in progress");
                 }
             }
         }
@@ -189,12 +247,14 @@ public class BattleServer implements MessageListener {
         for (ConnectionAgent agent : connectionAgentsList){
             if (agent == source){
                 try {
+                    System.out.println("Closing player");
                     agent.close();
                 }catch (IOException e){
                     e.printStackTrace();
                 }
             }
         }
+
         source.removeMessageListener(this);
         this.connectionAgentsList.remove((ConnectionAgent) source);
     }

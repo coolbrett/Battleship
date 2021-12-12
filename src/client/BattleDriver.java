@@ -29,8 +29,7 @@ public class BattleDriver {
 
                 Scanner scanner = new Scanner(System.in);
                 String command = "";
-                System.out.println("\nType commands once it's your turn!");
-                while (!command.equalsIgnoreCase("/surrender")){
+                while (!battleClient.getConnectionAgent().getThread().isInterrupted()){
                     command = scanner.nextLine();
                     if (!command.contains("/battle")) {
                         battleClient.send(command);
@@ -39,6 +38,8 @@ public class BattleDriver {
                     }
                 }
                 scanner.close();
+                System.out.println("Closing client");
+                System.exit(1);
 
             } catch (UnknownHostException e) {
                 System.out.println("USAGE: java client.BattleDriver <HOST> <PORT> <USERNAME>");

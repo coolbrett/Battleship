@@ -81,4 +81,8 @@ public class BattleClient extends MessageSource implements MessageListener {
         this.connectionAgent.getThread().start();
         this.send("/battle " + username);
     }
+
+    public ConnectionAgent getConnectionAgent() {
+        return connectionAgent;
+    }
 }
