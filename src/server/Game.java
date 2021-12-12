@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author Katherine Blanton
  * @version 11/22/2021
  */
-
 public class Game {
 
     /** arrayList of the grids in the game */
@@ -116,14 +115,27 @@ public class Game {
         this.gameOver = gameOver;
     }
 
+    /**
+     * Getter method for running field
+     * @return running field
+     */
     public boolean getRunning() {
         return this.running;
     }
 
+    /**
+     * Getter method for Current player
+     * @return current player field
+     */
     public Grid getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Method to handle fire command
+     * @param commands commands to based fire command on
+     * @return true if board was fired on, false otherwise
+     */
     public boolean fire(String[] commands) {
         boolean fired = false;
         int row = Integer.parseInt(commands[1]);
@@ -174,7 +186,11 @@ public class Game {
         }
     }
 
-
+    /**
+     * Method to handle surrender command
+     * @param username username to remove from grids list
+     * @return true if player was removed, false if current player isn't equal to username surrendering
+     */
     public boolean surrender(String username) {
         if (currentPlayer.getUsername().equals(username)) {
             Grid gridToRemove = null;

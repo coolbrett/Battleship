@@ -1,10 +1,5 @@
 package server;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
-
 /**
  * This class represents the battleship driver
  *
@@ -28,7 +23,6 @@ public class BattleShipDriver {
      *             size.
      * @throws NumberFormatException If command arg is not an integer
      */
-
     public static void main(String[] args) {
 
         //checking for arg length of 1 or 2
