@@ -42,7 +42,7 @@ public class BattleShipDriver {
                 System.exit(2);
             }
         } else {
-            System.out.println("Usage: java BoardSize");
+            System.out.println("Usage: java <PORT> <OPTIONAL BOARD SIZE>");
             System.exit(1);
         }
     }
