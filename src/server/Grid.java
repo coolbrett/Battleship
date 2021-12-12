@@ -26,7 +26,7 @@ public class Grid {
     /** Random generator */
     private final Random random = new Random();
 
-    /** The total number of the size of ships on the grid aka hitpoints */
+    /** The total number of the size of ships on the grid aka hit points */
     private int hitPoints = 0;
 
     /**
@@ -158,7 +158,8 @@ public class Grid {
      * @param direction Integer of direction to go
      * @param directions Integer arraylist of all directions to go
      */
-    private boolean tryLeft(int x, int y, Symbol ship, int direction, ArrayList<Integer> directions) {
+    private boolean tryLeft(int x, int y, Symbol ship, int direction,
+                            ArrayList<Integer> directions) {
         if (x - ship.getSize() < size && x - ship.getSize() > -1) {
             if (putShip(x, y, direction, ship)) {
                 return true;
@@ -261,7 +262,8 @@ public class Grid {
             MIN = 4;
             MAX = 6;
         }
-        //Line below gets random number for number of ships to place, based on above if-else tree
+        //Line below gets random number for number of ships to place,
+        // based on above if-else tree
         return random.nextInt((MAX - MIN) + 1) + MIN;
     }
 

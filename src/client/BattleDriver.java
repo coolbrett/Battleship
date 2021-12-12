@@ -23,7 +23,8 @@ public class BattleDriver {
         }else {
             try{
 
-                BattleClient battleClient = new BattleClient(args[0], Integer.parseInt(args[1]), args[2]);
+                BattleClient battleClient = new BattleClient(args[0],
+                        Integer.parseInt(args[1]), args[2]);
                 battleClient.addMessageListener(new PrintStreamMessageListener(System.out));
                 battleClient.connect();
 

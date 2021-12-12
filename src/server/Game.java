@@ -84,8 +84,8 @@ public class Game {
     }
 
     /**
-     * Command to display grids. Shows grid of current player with ships and opponent grids with 
-     * just hits and misses
+     * Command to display grids. Shows grid of current player with ships and opponent
+     * grids with just hits and misses
      * @param usernameToDisplay username of Grid to display
      */
     public Grid display(String usernameToDisplay){
@@ -189,7 +189,8 @@ public class Game {
     /**
      * Method to handle surrender command
      * @param username username to remove from grids list
-     * @return true if player was removed, false if current player isn't equal to username surrendering
+     * @return true if player was removed, false if current player isn't equal to
+     * username surrendering
      */
     public boolean surrender(String username) {
         if (currentPlayer.getUsername().equals(username)) {
